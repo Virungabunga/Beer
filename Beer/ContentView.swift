@@ -1,0 +1,56 @@
+//
+//  ContentView.swift
+//  Beer
+//
+//  Created by Oscar Sparrman on 2023-02-01.
+//
+
+import SwiftUI
+import _MapKit_SwiftUI
+
+struct ContentView: View {
+    var locationManager = LocationManager()
+            
+    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3323341, longitude: -122.0312186), span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+    @StateObject var bars = Bars()
+        
+    var body: some View {
+        VStack {
+            
+            Map(coordinateRegion: $region,
+                interactionModes: [.all],
+                showsUserLocation: true,
+                userTrackingMode: .constant(.follow),
+                annotationItems: bars.bars) { bar in
+                MapAnnotation(coordinate:bar.placeMark.coordinate , anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
+                    MapPinView(bar: bar)
+                }
+                
+            }
+    
+            Button(action: {
+                
+            }) {
+                Text("Vart är bärsen?")
+            }
+        }.onAppear(perform: locationManager.startLocationUpdates)
+    }
+}
+
+struct MapPinView: View {
+    var bar : Bar
+    
+    var body: some View {
+        VStack {
+            Image("beer")
+                .resizable()
+                .frame(width: 30, height: 30)
+            Text(bar.name.description)
+        }
+    }
+}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
