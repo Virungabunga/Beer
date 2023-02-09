@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
-
+import Firebase 
 @main
 struct BeerApp: App {
+    
+    init() {
+        FirebaseApp.configure()
+    }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+       
+          ContentView()
         }
     }
 }
