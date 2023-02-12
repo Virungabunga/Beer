@@ -15,6 +15,7 @@
 		611F14AD298BC6910029F81C /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 611F14AC298BC6910029F81C /* FirebaseFunctions */; };
 		611F14AF298BC6910029F81C /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 611F14AE298BC6910029F81C /* FirebaseStorage */; };
 		611F14B1298BC6910029F81C /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 611F14B0298BC6910029F81C /* FirebaseStorageCombine-Community */; };
+		617D8956299953A3005E3B02 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617D8955299953A3005E3B02 /* Users.swift */; };
 		61B0FE35298A864B008B0312 /* BeerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B0FE34298A864B008B0312 /* BeerApp.swift */; };
 		61B0FE37298A864B008B0312 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B0FE36298A864B008B0312 /* ContentView.swift */; };
 		61B0FE39298A864C008B0312 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B0FE38298A864C008B0312 /* Assets.xcassets */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		611F14A1298BC52D0029F81C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		617D8955299953A3005E3B02 /* Users.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		61B0FE31298A864B008B0312 /* Beer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B0FE34298A864B008B0312 /* BeerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeerApp.swift; sourceTree = "<group>"; };
 		61B0FE36298A864B008B0312 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				61C45506298BF10200BC2580 /* SignUpView.swift */,
 				61B0FE5E298A8755008B0312 /* LocationManager.swift */,
 				61C45502298BDB4100BC2580 /* User.swift */,
+				617D8955299953A3005E3B02 /* Users.swift */,
 				61B0FE62298A880A008B0312 /* Bars.swift */,
 				61B0FE64298A881F008B0312 /* Bar.swift */,
 				61B0FE38298A864C008B0312 /* Assets.xcassets */,
@@ -306,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61B0FE65298A881F008B0312 /* Bar.swift in Sources */,
+				617D8956299953A3005E3B02 /* Users.swift in Sources */,
 				61C45505298BDCCD00BC2580 /* LoginView.swift in Sources */,
 				61B0FE37298A864B008B0312 /* ContentView.swift in Sources */,
 				61B0FE63298A880A008B0312 /* Bars.swift in Sources */,

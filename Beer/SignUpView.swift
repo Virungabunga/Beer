@@ -11,21 +11,61 @@ struct SignUpView : View{
     @Binding var isSignedIn : Bool
     @State var userName : String = ""
     @State var userPassword : String = ""
-    @State var ispresting  : Bool = false
+    @State var showLoginView  : Bool = false
     @State var showSignUp : Bool
     var body: some View{
-        VStack{
-            TextField("User Name", text: $userName)
-            TextField("Password", text: $userPassword)
-                .padding()
-            
-            Button(action:{
-                signUp()
-            }){
-                Text("Sign Up")
+        NavigationView {
+            ZStack{
+                Image("background")
+                         .resizable()
+                         .edgesIgnoringSafeArea(.all)
+                VStack{
+                    
+                    TextField("User Name", text: $userName).padding(10)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.orange, lineWidth: 2)
+                        }.padding(.horizontal)
+                        .padding()
+                    
+                    SecureField("Password", text: $userPassword).padding(10)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.orange, lineWidth: 2)
+                        }.padding(.horizontal)
+                        .padding()
+                    
+                    Button {
+                        signUp()
+                    } label: {
+                        Text("Sign up")
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                    }
+                    .frame(height: 50)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        LinearGradient(colors: [.yellow, .red],                   startPoint: .topLeading,                   endPoint: .bottomTrailing)
+                    )
+                    .cornerRadius(20)
+                    .padding()
+                    
+                }.fullScreenCover(isPresented: $showLoginView) {
+                    ContentView()
+                }
             }
-        }.fullScreenCover(isPresented: $ispresting) {
-            ContentView()
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            showLoginView = true
+                        } label: {
+                            Text("Back")
+                        }
+
+                    
+                    }
+                }
         }
         
     }

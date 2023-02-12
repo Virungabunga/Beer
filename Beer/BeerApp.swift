@@ -9,14 +9,14 @@ import SwiftUI
 import Firebase 
 @main
 struct BeerApp: App {
-    
+    @StateObject var bars = Bars()
     init() {
         FirebaseApp.configure()
     }
     var body: some Scene {
         WindowGroup {
-       
           ContentView()
+                .environmentObject(bars)
         }
     }
 }

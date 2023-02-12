@@ -30,9 +30,10 @@ struct ContentView: View {
 
 struct MapView : View{
     var locationManager = LocationManager()
-    
-    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3323341, longitude: -122.0312186), span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
-    @StateObject var bars = Bars()
+    @State var showBarView = false
+    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3323341, longitude: -122.0312186), span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
+    @EnvironmentObject var bars :Bars
+    @State var barSelected = Bar(name: "test", latitude: 0.0, longitude: 0.0, phone: "test",liveReview: "test")
     
     var body: some View{
         ZStack{
@@ -44,8 +45,14 @@ struct MapView : View{
                     showsUserLocation: true,
                     userTrackingMode: .constant(.follow),
                     annotationItems: bars.bars) { bar in
-                    MapAnnotation(coordinate:bar.placeMark.coordinate , anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
-                        MapPinView(bar: bar)
+                    MapAnnotation(coordinate:CLLocationCoordinate2D(latitude: bar.latitude, longitude: bar.longitude) , anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
+                        MapPinView().onTapGesture(count: 1) {
+                            barSelected = bar
+                            showBarView.toggle()
+                         
+                               
+                            
+                        }
         
                     }
                     
@@ -62,14 +69,43 @@ struct MapView : View{
                     .frame(width: 50, height: 50)
                 
             }
-            
-        }
+            Spacer(minLength: 60)
+            BarView(barSelected:$barSelected).opacity(showBarView ? 0 : 1)
+        }.ignoresSafeArea()
+        
+        
     }
+
     
 }
-struct MapPinView: View {
-    var bar : Bar
+
+struct BarView  : View {
     
+    
+    // Du ska skapa binding variabel som visar vilka vänner är vid bar 
+    @Binding var friendAtBar : String
+    @Binding var barSelected : Bar
+   
+    var body : some View {
+        ZStack{
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color("beerColor"))
+                .frame(width: 300, height: 100)
+            VStack{
+                Text(barSelected.name).scaledToFit()
+                HStack{
+                    Text(barSelected.liveReview)
+                
+                    Image(systemName:"figure.socialdance" )
+                    Text(friendAtBar)
+                }
+            }
+        }.padding(.top,600)
+    }
+
+}
+struct MapPinView: View {
+   
     var body: some View {
         VStack {
             Image("beer")
