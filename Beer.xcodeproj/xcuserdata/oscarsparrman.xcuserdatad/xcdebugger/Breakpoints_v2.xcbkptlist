@@ -14,8 +14,8 @@
             filePath = "Beer/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "body"
             landmarkType = "24">
             <Actions>
@@ -46,9 +46,9 @@
             filePath = "Beer/Bars.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "fetchData(locationManager:)"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "fetchDataFromMaps(locationManager:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,8 +62,8 @@
             filePath = "Beer/Bars.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "writeToFB(bar:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,9 +78,9 @@
             filePath = "Beer/Bars.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "fetchData(locationManager:)"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "fetchDataFromMaps(locationManager:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

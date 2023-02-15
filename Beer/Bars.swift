@@ -19,36 +19,46 @@ class Bars : ObservableObject {
     
     
     
-    func readFromFb() {
-        
-        db.collection("Bars").addSnapshotListener { (querySnapshot, error) in
-         
-            guard  let documents = querySnapshot?.documents else {
-                print("No documents")
-                return
-            }
-            self.bars = documents.map { d in
-                
-                return Bar(name:d["name"] as! String,
-                           latitude: d["latitude"] as! Double,
-                           longitude: d["longitude"] as! Double,
-                           phone: d["phone"] as! String,
-                            liveReview: d["liveReview"] as! String)
+    
+    func listenToFirestore() {
+        db.collection("Bars").addSnapshotListener { snapshot, err in
+            guard let snapshot = snapshot else {return}
+            
+            if let err = err {
+                print("Error getting document \(err)")
+            } else {
+                //                        items.removeAll()
+                for document in snapshot.documents {
+                    
+                    let result = Result {
+                        try document.data(as: Bar.self)
+                    }
+                    switch result  {
+                    case .success(let item)  :
+                        self.bars.append(item)
+                    case .failure(let error) :
+                        print("Error decoding item: \(error)")
+                    }
+                }
             }
         }
     }
     
     
+    
+    
     func writeToFB(bar : Bar) {
         do {
-            try db.collection("Bars").document().setData(from:bar)
+            try
+            //Kontrolerra .document
+            db.collection("Bars").document().setData(from:bar)
         } catch {
             print(error)
         }
     }
     
     
-    func fetchData(locationManager:LocationManager) {
+    func fetchDataFromMaps(locationManager:LocationManager) {
         
         if let location = locationManager.location{
             var filter = MKPointOfInterestFilter(including:[.nightlife])
@@ -66,7 +76,7 @@ class Bars : ObservableObject {
                         
                         
                         
-                        self.bars.append(Bar(name: item.name!,
+                        self.bars.append(Bar(id:"",name: item.name!,
                                              latitude: item.placemark.coordinate.latitude,
                                              longitude: item.placemark.coordinate.longitude,
                                              phone: item.phoneNumber!,liveReview: ""))

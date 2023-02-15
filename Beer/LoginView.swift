@@ -13,6 +13,7 @@ struct LoginView: View {
     @State var userName : String = ""
     @State var userPassword : String = ""
     @State var showSignUp = false
+    @EnvironmentObject var userHandler : UserHandler
     
     var body: some View {
         NavigationView {
@@ -71,9 +72,18 @@ struct LoginView: View {
     }
     
     func Login(userName: String,userPassword: String)   {
+        
         Auth.auth().signIn(withEmail: userName, password: userPassword) {  authResult, error in
-            // guard let strongSelf = self else { return }
-            if (authResult?.user.uid == nil) { isSignedIn = true }
+            
+    //ÄNDRADE FRÅN == till != 
+            if (authResult?.user != nil) {
+                
+                
+                
+                isSignedIn = true
+                
+            }
+            else {print(error)}
             
         }
     }

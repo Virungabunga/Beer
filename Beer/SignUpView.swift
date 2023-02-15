@@ -7,6 +7,7 @@
 import SwiftUI
 import Foundation
 import FirebaseAuth
+
 struct SignUpView : View{
     @Binding var isSignedIn : Bool
     @State var userName : String = ""
@@ -37,6 +38,7 @@ struct SignUpView : View{
                     
                     Button {
                         signUp()
+                      
                     } label: {
                         Text("Sign up")
                             .font(.title2)
@@ -70,9 +72,18 @@ struct SignUpView : View{
         
     }
     
+    
+
     func signUp()  {
         Auth.auth().createUser(withEmail: userName, password: userPassword) { authResult, error in
-            if (authResult?.user.uid == nil) { isSignedIn = true;  showSignUp = false}
+            if (authResult?.user.uid == nil) {
+                isSignedIn = true;
+                showSignUp = false
+            
+            }
         }
+        
     }
+    
+
 }

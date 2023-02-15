@@ -16,6 +16,7 @@
 		611F14AF298BC6910029F81C /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 611F14AE298BC6910029F81C /* FirebaseStorage */; };
 		611F14B1298BC6910029F81C /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 611F14B0298BC6910029F81C /* FirebaseStorageCombine-Community */; };
 		617D8956299953A3005E3B02 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617D8955299953A3005E3B02 /* Users.swift */; };
+		61925864299A711A001407B6 /* UserHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61925863299A711A001407B6 /* UserHandler.swift */; };
 		61B0FE35298A864B008B0312 /* BeerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B0FE34298A864B008B0312 /* BeerApp.swift */; };
 		61B0FE37298A864B008B0312 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B0FE36298A864B008B0312 /* ContentView.swift */; };
 		61B0FE39298A864C008B0312 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B0FE38298A864C008B0312 /* Assets.xcassets */; };
@@ -50,7 +51,9 @@
 
 /* Begin PBXFileReference section */
 		611F14A1298BC52D0029F81C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		612F7B53299BC85D00989AB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		617D8955299953A3005E3B02 /* Users.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
+		61925863299A711A001407B6 /* UserHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandler.swift; sourceTree = "<group>"; };
 		61B0FE31298A864B008B0312 /* Beer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B0FE34298A864B008B0312 /* BeerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeerApp.swift; sourceTree = "<group>"; };
 		61B0FE36298A864B008B0312 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -124,6 +127,7 @@
 		61B0FE33298A864B008B0312 /* Beer */ = {
 			isa = PBXGroup;
 			children = (
+				612F7B53299BC85D00989AB0 /* Info.plist */,
 				611F14A1298BC52D0029F81C /* GoogleService-Info.plist */,
 				61B0FE34298A864B008B0312 /* BeerApp.swift */,
 				61B0FE36298A864B008B0312 /* ContentView.swift */,
@@ -131,6 +135,7 @@
 				61C45506298BF10200BC2580 /* SignUpView.swift */,
 				61B0FE5E298A8755008B0312 /* LocationManager.swift */,
 				61C45502298BDB4100BC2580 /* User.swift */,
+				61925863299A711A001407B6 /* UserHandler.swift */,
 				617D8955299953A3005E3B02 /* Users.swift */,
 				61B0FE62298A880A008B0312 /* Bars.swift */,
 				61B0FE64298A881F008B0312 /* Bar.swift */,
@@ -315,6 +320,7 @@
 				61B0FE63298A880A008B0312 /* Bars.swift in Sources */,
 				61C45507298BF10200BC2580 /* SignUpView.swift in Sources */,
 				61B0FE35298A864B008B0312 /* BeerApp.swift in Sources */,
+				61925864299A711A001407B6 /* UserHandler.swift in Sources */,
 				61B0FE5F298A8755008B0312 /* LocationManager.swift in Sources */,
 				61C45503298BDB4100BC2580 /* User.swift in Sources */,
 			);
@@ -477,6 +483,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Beer/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Beer/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Give me that POS";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -506,6 +513,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Beer/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Beer/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Give me that POS";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

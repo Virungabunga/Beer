@@ -20,7 +20,7 @@ class Bar : Identifiable, Codable  {
         case liveReview
     }
  //Skapa kordinat variabler för att encode och decode för placeMark är ej Codable
-    var id = UUID()
+    var id : String = ""
     var name : String = ""
     var latitude : Double = 0.0
     var longitude : Double = 0.0
@@ -30,7 +30,7 @@ class Bar : Identifiable, Codable  {
 
   
     
-    init(id: UUID = UUID(), name: String, latitude: Double, longitude: Double, phone: String, liveReview : String) {
+    init(id: String, name: String, latitude: Double, longitude: Double, phone: String, liveReview : String) {
         self.id = id
         self.name = name
         self.latitude = latitude
@@ -43,7 +43,7 @@ class Bar : Identifiable, Codable  {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self,forKey:.id)
+        id = try container.decode(String.self,forKey:.id)
         name = try container.decode(String.self,forKey:.name )
         latitude = try container.decode(Double.self,forKey:.latitude )
         longitude = try container.decode(Double.self,forKey:.longitude )
