@@ -14,6 +14,8 @@ struct SignUpView : View{
     @State var userPassword : String = ""
     @State var showLoginView  : Bool = false
     @State var showSignUp : Bool
+    @State var currentUser : User?
+    @EnvironmentObject var userHandler : UserHandler
     var body: some View{
         NavigationView {
             ZStack{
@@ -76,10 +78,16 @@ struct SignUpView : View{
 
     func signUp()  {
         Auth.auth().createUser(withEmail: userName, password: userPassword) { authResult, error in
-            if (authResult?.user.uid == nil) {
+            if  let user = authResult?.user  {
                 isSignedIn = true;
                 showSignUp = false
-            
+                
+                
+               currentUser = User(id: user.uid, name: userName)
+                if let currentUser = currentUser{
+                    userHandler.WriteToDb(user: currentUser)
+                    
+                }
             }
         }
         

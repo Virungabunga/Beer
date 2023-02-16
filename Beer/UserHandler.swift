@@ -14,19 +14,35 @@ import FirebaseCore
 import  Firebase
 
 class UserHandler : ObservableObject  {
+    @MainActor 
     let db = Firestore.firestore()
+    
     @Published var currentUser : User?
-    @Published var friendList = [User]()
-    @Published var userList = [User]()
+    @Published var friendList : [User]
+    @Published var userList : [User]
     
+    init(currentUser: User, friendList: [User] = [User](), userList: [User] = [User]()) {
+        self.currentUser = currentUser
+        self.friendList = []
+        self.userList = []
+    }
     
+    init() {
+        
+        self.currentUser = nil
+        self.friendList = []
+        self.userList = []
+        
+        
+    }
    
     
-    func WriteTiDb(user:User) {
-        if let currentUser = Auth.auth().currentUser{
+    func WriteToDb(user:User) {
+        
+        if let AuthUser = Auth.auth().currentUser{
             do {
                 
-                try db.collection("Users").document(currentUser.uid).setData(from: user)
+                try db.collection("Users").document(AuthUser.uid).setData(from: user)
             } catch {
                 print(error)
             }
@@ -61,13 +77,14 @@ class UserHandler : ObservableObject  {
     
     func setCurrentUser(userList: [User] )  {
         //SÄTT USER FRÅN INLOGG
-        //felsöka hitta användare 
+        //måste ha userlistHÄr
         print(userList)
         
-            if Auth.auth().currentUser != nil {
+            if let user = Auth.auth().currentUser{
+
+                currentUser = userList.first { $0.id == user.uid}
                 
-                currentUser = userList.first { $0.id == Auth.auth().currentUser?.uid}
-                
+                			
             } else {
                 print("No one signed in")
             }

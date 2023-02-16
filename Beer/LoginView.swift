@@ -8,13 +8,13 @@
 import SwiftUI
 import FirebaseAuth
 struct LoginView: View {
-    //  @State private var isPresenting = false
+    @State var currentUser : User?
     @Binding var isSignedIn : Bool
     @State var userName : String = ""
     @State var userPassword : String = ""
     @State var showSignUp = false
     @EnvironmentObject var userHandler : UserHandler
-    
+
     var body: some View {
         NavigationView {
             
@@ -24,20 +24,21 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 VStack(alignment: .leading, spacing: 15){
                     Spacer()
-                    TextField("User Name", text: $userName).padding(10)
+                    TextField("User Name", text: $userName).padding(10).textCase(.lowercase)
                         .overlay {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(.orange, lineWidth: 2)
                         }.padding(.horizontal)
                     
-                    SecureField("Password", text: $userPassword).padding(10)
+                    SecureField("Password", text: $userPassword).padding(10).textCase(.lowercase)
                         .overlay {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(.orange, lineWidth: 2)
                         }.padding(.horizontal)
                     
                     Button {
-                        Login(userName: userName , userPassword: userPassword)
+                        //sätt temporär user för felsök sätt till baka userName och userPassword
+                        Login(userName: userName, userPassword: userPassword )
                     } label: {
                         Text("Sign In")
                             .font(.title2)
@@ -75,13 +76,9 @@ struct LoginView: View {
         
         Auth.auth().signIn(withEmail: userName, password: userPassword) {  authResult, error in
             
-    //ÄNDRADE FRÅN == till != 
-            if (authResult?.user != nil) {
-                
-                
-                
+            if let user = authResult?.user {
+                currentUser =  User(id:user.uid, name: userName)
                 isSignedIn = true
-                
             }
             else {print(error)}
             

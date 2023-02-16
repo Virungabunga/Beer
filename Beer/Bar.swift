@@ -8,17 +8,9 @@
 //MKPlacemark MKPlacemark conforms to NSSecureCoding. You can just use NSKeyedArchiver and NSKeyedUnarchiver to encode/decode it.
 import Foundation
 import MapKit
-class Bar : Identifiable, Codable  {
+struct Bar : Identifiable, Codable  {
     
-    enum CodingKeys : CodingKey {
-        case id
-        case name
-        case latitude
-        case longitude
-//        case placemark
-        case phone
-        case liveReview
-    }
+
  //Skapa kordinat variabler för att encode och decode för placeMark är ej Codable
     var id : String = ""
     var name : String = ""
@@ -41,29 +33,8 @@ class Bar : Identifiable, Codable  {
         
     }
     
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self,forKey:.id)
-        name = try container.decode(String.self,forKey:.name )
-        latitude = try container.decode(Double.self,forKey:.latitude )
-        longitude = try container.decode(Double.self,forKey:.longitude )
-//        placeMark = try container.decode(MKPlacemark.self,forKey:.placemark )
-        phone = try container.decode(String.self, forKey: .phone)
-        liveReview = try container.decode(String.self, forKey: .liveReview)
-        
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(id, forKey: .id)
-        try container.encode(latitude, forKey: .latitude)
-        try  container.encode(longitude, forKey: .longitude)
-        try container.encode(phone, forKey: .phone)
-        try container.encode(liveReview, forKey: .liveReview)
 
-    }
-    
+
 
     
 }

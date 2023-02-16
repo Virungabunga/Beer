@@ -10,31 +10,15 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseCore
 
-class User: Identifiable, Codable {
-    
-    enum CodingKeys : CodingKey {
-        case id
-        case name
-        case isAtLocation
-        case friendList
-    }
-    
+struct User: Identifiable, Codable {
     
     var id : String
     var name : String
-    var isAtLocation : Bool = false
+    var isAtLocation : Bool
     var friendList  : [String]
     
     
 
-    required  init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self,forKey:.id)
-        name = try container.decode(String.self,forKey:.name)
-        isAtLocation = try container.decode(Bool.self,forKey:.isAtLocation)
-        friendList = try container.decode(Array<String>.self, forKey:.friendList)
-       
-    }
     
     init( id: String, name : String, isAtLocation: Bool, friendList: Array<String> ){
         self.id = id
@@ -42,22 +26,15 @@ class User: Identifiable, Codable {
         self.isAtLocation = isAtLocation
         self.friendList = friendList
     }
-    
-    init( id: String, name : String, isAtLocation: Bool){
+ 
+    init( id: String, name : String){
         self.id = id
         self.name = name
-        self.isAtLocation = isAtLocation
-        self.friendList = []
+        self.isAtLocation = false
+        self.friendList = ["vän1","vän2"]
     }
+
     
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(name, forKey: .name)
-        try container.encode(isAtLocation, forKey: .isAtLocation)
-        try container.encode(friendList, forKey: .friendList)
-    }  
 }
     
 

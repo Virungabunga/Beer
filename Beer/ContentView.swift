@@ -11,6 +11,7 @@ import FirebaseAuth
 import Firebase
 
 struct ContentView: View {
+    @EnvironmentObject var locationManager : LocationManager
     @EnvironmentObject var bars :Bars
     @State var signedIn = false
     @State var showSignUp : Bool = false
@@ -23,7 +24,8 @@ struct ContentView: View {
             LoginView(isSignedIn: $signedIn)
         } else  if (showSignUp == false && signedIn == true) {
        
-            MapView().task {
+            MapView().onAppear() {
+
                 bars.listenToFirestore()
                 userHandler.listenToFirestore()
             }
@@ -35,8 +37,8 @@ struct ContentView: View {
     
     
     struct MapView : View{
+        @EnvironmentObject var locationManager : LocationManager
         @EnvironmentObject var userHandler : UserHandler
-        var locationManager = LocationManager()
         @State var showBarView = false
         @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3323341, longitude: -122.0312186), span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
         @EnvironmentObject var bars :Bars
@@ -77,10 +79,10 @@ struct ContentView: View {
                     
                 }
                 Spacer(minLength: 60)
-       //     if let user = userHandler.currentUser{
-                BarView(barSelected:$barSelected,currentUser: userHandler.currentUser!).opacity(showBarView ? 0 : 1)
+            if let user = userHandler.currentUser{
+                BarView(barSelected:$barSelected,currentUser: user).opacity(showBarView ? 0 : 1)
                 
-          //  }
+            }
             }.ignoresSafeArea()
             
             
@@ -91,8 +93,8 @@ struct ContentView: View {
     
     struct BarView  : View {
         @Binding var barSelected : Bar
-        // Du ska skapa binding variabel som visar vilka vänner är vid bar
-       var currentUser: User
+        // Du ska skapa binding variabel som visar vilka vänner är vid bar???
+        var currentUser: User
 
         
         

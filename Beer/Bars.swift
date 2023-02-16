@@ -4,7 +4,7 @@
 //
 //  Created by Oscar Sparrman on 2023-02-01.
 //
-
+import CryptoKit
 import Foundation
 import MapKit
 import FirebaseCore
@@ -12,6 +12,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 class Bars : ObservableObject {
+    @MainActor 
     var listOfItems : [MKMapItem] = []
     var locationManager : LocationManager?
     @Published var bars : [Bar] = []
@@ -35,6 +36,7 @@ class Bars : ObservableObject {
                     }
                     switch result  {
                     case .success(let item)  :
+                       
                         self.bars.append(item)
                     case .failure(let error) :
                         print("Error decoding item: \(error)")
@@ -44,14 +46,24 @@ class Bars : ObservableObject {
         }
     }
     
+    func hashStrig(stringToHash:String)  -> String{
+        
+        let inputData = Data(stringToHash.utf8)
+        let hashed = SHA256.hash(data: inputData)
+        let hashString = hashed.compactMap { String(format: "%02x", $0) }.joined()
+       
+        print(hashString)
+        return hashString
+    }
     
+  
     
     
     func writeToFB(bar : Bar) {
         do {
             try
-            //Kontrolerra .document
-            db.collection("Bars").document().setData(from:bar)
+            //
+            db.collection("Bars").document(bar.id).setData(from:bar)
         } catch {
             print(error)
         }
@@ -61,7 +73,7 @@ class Bars : ObservableObject {
     func fetchDataFromMaps(locationManager:LocationManager) {
         
         if let location = locationManager.location{
-            var filter = MKPointOfInterestFilter(including:[.nightlife])
+            let filter = MKPointOfInterestFilter(including:[.nightlife])
             let request =  MKLocalPointsOfInterestRequest(center: location, radius: 200)
             request.pointOfInterestFilter = filter
             let searchObject = MKLocalSearch(request: request)
@@ -70,21 +82,25 @@ class Bars : ObservableObject {
                 
                 if let mapItems = response?.mapItems {
                     self.listOfItems = mapItems
-                    
+                
                     for item in mapItems{
-                        print(item.description)
-                        
-                        
-                        
-                        self.bars.append(Bar(id:"",name: item.name!,
-                                             latitude: item.placemark.coordinate.latitude,
-                                             longitude: item.placemark.coordinate.longitude,
-                                             phone: item.phoneNumber!,liveReview: ""))
-                        for bar in self.bars {
-                            self.writeToFB(bar: bar)
+                        if let name = item.name {
+                            print(item.description)
+                            
+                            let id = self.hashStrig(stringToHash: name)
+                            
+
+                            self.bars.append(Bar(id:id,name: name,
+                                                 latitude: item.placemark.coordinate.latitude,
+                                                 longitude: item.placemark.coordinate.longitude,
+                                                 phone: item.phoneNumber!,liveReview: ""))
+                            
+                            for bar in self.bars {
+                                self.writeToFB(bar: bar)
+                                
+                            }
                             
                         }
-                        
                     }
                 }
                 

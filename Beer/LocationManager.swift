@@ -8,11 +8,13 @@
 import Foundation
 import CoreLocation
 
-class LocationManager : NSObject, CLLocationManagerDelegate {
+class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
     
+ 
     var location : CLLocationCoordinate2D?
     let manager = CLLocationManager()
-   
+    
+    
     override init() {
         super.init()
         manager.delegate = self
