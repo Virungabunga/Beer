@@ -16,15 +16,18 @@ import  Firebase
 class UserHandler : ObservableObject  {
     @MainActor 
     let db = Firestore.firestore()
-    
+
     @Published var currentUser : User?
     @Published var friendList : [User]
     @Published var userList : [User]
+    var friendrequestList : [User]?
+    var friend: User
     
-    init(currentUser: User, friendList: [User] = [User](), userList: [User] = [User]()) {
+    init(currentUser: User, friendList: [User] = [User](), userList: [User] = [User](), friend : User) {
         self.currentUser = currentUser
         self.friendList = []
         self.userList = []
+        self.friend = friend
     }
     
     init() {
@@ -32,25 +35,62 @@ class UserHandler : ObservableObject  {
         self.currentUser = nil
         self.friendList = []
         self.userList = []
-        
+        self.friend = User(id: "", name: "")
         
     }
-   
     
-    func WriteToDb(user:User) {
+
+//    func sendFriendReq() {
+//
+//        if (
+//      ((   userList.first { User in
+//            User.id == friend.id
+//      }) != nil)){
+//            if let currentUser = currentUser{
+//                friend.friendReqList?.append(currentUser)
+//                writeToDb(user: currentUser, collection: "Users")
+//            }
+//        }
+//
+//
+//
+//    }
+//
+//    func acceptFriendReq()     {
+//
+//        if (
+//            ((   userList.first { User in
+//                User.id == friend.id
+//            }) != nil)) {
+//            if let currentUser = currentUser{
+//                friend.friendReqList?.append(currentUser)
+//                writeToDb(user: currentUser, collection: "Users")
+//            }
+//
+//
+//        }
+//    }
         
-        if let AuthUser = Auth.auth().currentUser{
+     
+    
+//    func removeFriend(userId:String)     {
+//
+//    }
+ 
+    func writeToDb(user:User, collection: String) {
+        
+        if let currentUser = Auth.auth().currentUser{
             do {
                 
-                try db.collection("Users").document(AuthUser.uid).setData(from: user)
+                try db.collection(collection).document(currentUser.uid).setData(from: user)
             } catch {
                 print(error)
             }
         }
     }
 
-    func listenToFirestore() {
-            db.collection("Users").addSnapshotListener { snapshot, err in
+    func listenToFirestore(collection:String) {
+            db.collection(collection).addSnapshotListener { snapshot, err in
                 guard let snapshot = snapshot else {return}
                 
                 if let err = err {
@@ -66,6 +106,7 @@ class UserHandler : ObservableObject  {
                         case .success(let user)  :
                             self.userList.append(user)
                             self.setCurrentUser(userList: self.userList)
+                          
                         case .failure(let error) :
                             print("Error decoding item: \(error)")
                         }

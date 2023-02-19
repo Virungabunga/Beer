@@ -7,10 +7,11 @@
 
 import Foundation
 import CoreLocation
-
+import MapKit
 class LocationManager : NSObject, CLLocationManagerDelegate, ObservableObject {
     
- 
+    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3323341, longitude: -122.0312186), span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
+    
     var location : CLLocationCoordinate2D?
     let manager = CLLocationManager()
     

@@ -10,16 +10,18 @@ import MapKit
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import UIKit
+import FirebaseStorage
 
 class Bars : ObservableObject {
     @MainActor 
     var listOfItems : [MKMapItem] = []
     var locationManager : LocationManager?
     @Published var bars : [Bar] = []
+    @Published var barSelected = Bar(id: "",name: "test", latitude: 0.0, longitude: 0.0, phone: "test",liveReview: "test")
+    
+    
     let db = Firestore.firestore()
-    
-    
-    
     
     func listenToFirestore() {
         db.collection("Bars").addSnapshotListener { snapshot, err in
@@ -60,6 +62,7 @@ class Bars : ObservableObject {
     
     
     func writeToFB(bar : Bar) {
+  
         do {
             try
             //
@@ -69,6 +72,50 @@ class Bars : ObservableObject {
         }
     }
     
+    func saveImage(bar: Bar, photo : ImageData, image : UIImage ) async -> Bool  {
+        
+        let photoName = UUID().uuidString
+        let storage = Storage.storage()
+        let storageRef = storage.reference().child("\(bar.id)/\(photoName).jpeg")
+        
+        guard let resizedImage = image.jpegData(compressionQuality: 0.2) else {
+            print("Could not compress")
+            return false
+        }
+        let metdata = StorageMetadata()
+        metdata.contentType = "image/jpg"  // allow to see in web browser
+        var imageUrlString = ""
+        
+        do {
+            let _ = try await storageRef.putDataAsync(resizedImage, metadata: metdata)
+            print("saved image")
+            do{
+                let imageURL = try await storageRef.downloadURL()
+                imageUrlString = "\(imageURL)"
+            } catch{
+                print("Could not get Url after saved image")
+                return false
+            }
+            
+        } catch {
+            print("error upload Image")
+            return false
+        }
+        let collectionString = "Bars/\(bar.id)/Images"
+        
+        do {
+            var newPhoto = photo
+            newPhoto.imageUrlString = imageUrlString
+            try await db.collection(collectionString).document(photoName).setData(newPhoto.dictionary)
+            print("photo data updated to fb")
+            return true
+            
+        }   catch {
+            print("could not update photo data to storage")
+            return false
+        }
+    
+    }
     
     func fetchDataFromMaps(locationManager:LocationManager) {
         
@@ -110,3 +157,5 @@ class Bars : ObservableObject {
         }
     }
 }
+
+

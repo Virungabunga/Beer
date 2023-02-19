@@ -9,7 +9,7 @@ import SwiftUI
 import Firebase 
 @main
 struct BeerApp: App {
-    
+    @State var isSignedIn: Bool = false
     @StateObject var bars = Bars()
     @StateObject var userHandler = UserHandler()
     @StateObject var locationManager = LocationManager()
@@ -18,7 +18,7 @@ struct BeerApp: App {
     }
     var body: some Scene {
         WindowGroup {
-          ContentView()
+            MainView(isSignedIn:isSignedIn)
                 .environmentObject(locationManager)
                 .environmentObject(userHandler)
                 .environmentObject(bars)

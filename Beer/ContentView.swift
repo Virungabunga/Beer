@@ -9,137 +9,138 @@ import SwiftUI
 import _MapKit_SwiftUI
 import FirebaseAuth
 import Firebase
-
 struct ContentView: View {
+    
     @EnvironmentObject var locationManager : LocationManager
     @EnvironmentObject var bars :Bars
-    @State var signedIn = false
-    @State var showSignUp : Bool = false
     @EnvironmentObject var userHandler : UserHandler
     
-
     var body: some View{
-        
-        if !signedIn {
-            LoginView(isSignedIn: $signedIn)
-        } else  if (showSignUp == false && signedIn == true) {
-       
-            MapView().onAppear() {
-
-                bars.listenToFirestore()
-                userHandler.listenToFirestore()
-            }
+        NavigationView {
+            MapView()
         }
-        
-        
     }
 }
+
+
+struct MapView : View{
     
+    @EnvironmentObject var locationManager : LocationManager
+    @EnvironmentObject var userHandler : UserHandler
+    @State var showBarView = false
     
-    struct MapView : View{
-        @EnvironmentObject var locationManager : LocationManager
-        @EnvironmentObject var userHandler : UserHandler
-        @State var showBarView = false
-        @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3323341, longitude: -122.0312186), span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
-        @EnvironmentObject var bars :Bars
-        @State var barSelected = Bar(id: "",name: "test", latitude: 0.0, longitude: 0.0, phone: "test",liveReview: "test")
-        var body: some View{
-            ZStack{
+    @EnvironmentObject var bars :Bars
+    
+    var body: some View{
+        ZStack{
+            
+            VStack {
                 
-                VStack {
-                    
-                    Map(coordinateRegion: $region,
-                        interactionModes: [.all],
-                        showsUserLocation: true,
-                        userTrackingMode: .constant(.follow),
-                        annotationItems: bars.bars) { bar in // SÄTT TiLL BINDING
-                        MapAnnotation(coordinate:CLLocationCoordinate2D(latitude: bar.latitude, longitude: bar.longitude) , anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
-                            MapPinView().onTapGesture(count: 1) {
-                                barSelected = bar
-                                showBarView.toggle()
-                                
-                                
-                                
-                            }
+                Map(coordinateRegion: $locationManager.region,
+                    interactionModes: [.all],
+                    showsUserLocation: true,
+                    userTrackingMode: .constant(.follow), //.constant(.follow) följer allltid  när jag trycker på anotaions
+                    annotationItems: bars.bars) { bar in // SÄTT TiLL BINDING?
+                    MapAnnotation(coordinate:CLLocationCoordinate2D(latitude: bar.latitude, longitude: bar.longitude) , anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
+                        MapPinView().onTapGesture() {
+                            bars.barSelected = bar
+                            showBarView.toggle()
+                            
+                            
                             
                         }
                         
                     }
                     
-                }.onAppear(perform: locationManager.startLocationUpdates)
-                Button(action: {
-                    bars.fetchDataFromMaps(locationManager: locationManager)
-                
-                }) {
-                    
-                    Image("beer")
-                        .renderingMode(Image.TemplateRenderingMode?.init(Image.TemplateRenderingMode.original))
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                    
                 }
-                Spacer(minLength: 60)
-            if let user = userHandler.currentUser{
-                BarView(barSelected:$barSelected,currentUser: user).opacity(showBarView ? 0 : 1)
+                
+            }.onAppear(perform: locationManager.startLocationUpdates)
+            Button(action: {
+                bars.fetchDataFromMaps(locationManager: locationManager)
+                
+            }) {
+                
+                Image("beer")
+                    .renderingMode(Image.TemplateRenderingMode?.init(Image.TemplateRenderingMode.original))
+                    .resizable()
+                    .frame(width: 50, height: 50)
                 
             }
-            }.ignoresSafeArea()
+            Spacer(minLength: 60)
+            
+            BarView().opacity(showBarView ? 0 : 1)
             
             
-        }
+        }.ignoresSafeArea()
         
         
     }
     
-    struct BarView  : View {
-        @Binding var barSelected : Bar
-        // Du ska skapa binding variabel som visar vilka vänner är vid bar???
-        var currentUser: User
+    
+}
 
-        
-        
-        
-        var body : some View {
+struct BarView  : View {
+    @EnvironmentObject var bars :Bars
+    @EnvironmentObject var userHandler : UserHandler
+    // Du ska skapa binding variabel som visar vilka vänner är vid bar???
+    
+    
+    var body : some View {
+        //Fixaa öl glas klick
+        NavigationLink {
+            BarBigView()
+        } label: {
             ZStack{
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color("beerColor"))
+                    .fill(LinearGradient(colors: [.yellow, .red],                   startPoint: .topLeading,                   endPoint: .bottomTrailing))
                     .frame(width: 300, height: 100)
                 VStack{
-                    Text(barSelected.name).scaledToFit()
+                    Text(bars.barSelected.name).scaledToFit()
+                        .foregroundColor(.black)
                     HStack{
-                        Text(barSelected.liveReview)
-                        
+                        Text(bars.barSelected.liveReview)
+                            .foregroundColor(.black)
+                        Spacer()
+                        //If frends turn turn gren and show up
                         Image(systemName:"figure.socialdance" )
-//                        List{
-//                            ForEach(currentUser.friendList, id: \.self) { friend in
-//                                Text(friend)
-//
-//                            }
-//
-//                        }
-                    }
+   
+                        
+                    }.frame(width: 200)
+                
+                    
                 }
             }.padding(.top,600)
-        }
-        
+              
+  
+        }  .frame(width: 300, height: 100)
     }
     
-    struct MapPinView: View {
-        
-        var body: some View {
-            VStack {
-                Image("beer")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                //            Text(bar.name.description)
-            }
+    
+    
+}
+
+struct MapPinView: View {
+    
+    var body: some View {
+        VStack {
+            Image("beer")
+                .resizable()
+                .frame(width: 30, height: 30)
+            //            Text(bar.name.description)
         }
-        
-        
-        
     }
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}
+    
+    
+    
+}
+
+struct ContentView_Previews: PreviewProvider {
+    @Binding var isSignedIn : Bool
+    static var previews: some View {
+        ContentView()
+            .environmentObject(LocationManager())
+            .environmentObject(UserHandler())
+            .environmentObject(Bars())
+    }
+    
+}

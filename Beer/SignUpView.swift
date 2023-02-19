@@ -56,7 +56,7 @@ struct SignUpView : View{
                     .padding()
                     
                 }.fullScreenCover(isPresented: $showLoginView) {
-                    ContentView()
+                    MainView(isSignedIn: isSignedIn)
                 }
             }
                 .toolbar {
@@ -85,7 +85,7 @@ struct SignUpView : View{
                 
                currentUser = User(id: user.uid, name: userName)
                 if let currentUser = currentUser{
-                    userHandler.WriteToDb(user: currentUser)
+                    userHandler.writeToDb(user: currentUser, collection: "Users")
                     
                 }
             }
