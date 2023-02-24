@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 struct MainView: View {
    
-  
+    @EnvironmentObject var imageLoader : ImageLoader
     @EnvironmentObject var locationManager : LocationManager
     @EnvironmentObject var bars :Bars
     @EnvironmentObject var userHandler : UserHandler
@@ -21,7 +21,7 @@ struct MainView: View {
 //    userHandler.listenToFirestore(collection: "Users")
     var body: some View {
         TabView (selection: $selectedTab) {
-                LoginView(isSignedIn: $isSignedIn)
+                LoginView()
                     .tabItem {
                         Label("Login", systemImage: "person.badge.key")
                     }.tag(1)
@@ -42,6 +42,9 @@ struct MainView: View {
         
             
         
+        }.onAppear {
+            userHandler.listenToFriendReq()
+           
         }
         
     }

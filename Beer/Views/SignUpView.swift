@@ -9,13 +9,14 @@ import Foundation
 import FirebaseAuth
 
 struct SignUpView : View{
-    @Binding var isSignedIn : Bool
+    
     @State var userName : String = ""
     @State var userPassword : String = ""
     @State var showLoginView  : Bool = false
     @State var showSignUp : Bool
     @State var currentUser : User?
     @EnvironmentObject var userHandler : UserHandler
+    @State var isSignedIn = false
     var body: some View{
         NavigationView {
             ZStack{
@@ -43,7 +44,7 @@ struct SignUpView : View{
                       
                     } label: {
                         Text("Sign up")
-                            .font(.title2)
+                            .font(. title2)
                             .bold()
                             .foregroundColor(.white)
                     }
@@ -56,8 +57,11 @@ struct SignUpView : View{
                     .padding()
                     
                 }.fullScreenCover(isPresented: $showLoginView) {
-                    MainView(isSignedIn: isSignedIn)
+                
+                    ContentView()
                 }
+                
+                
             }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -75,19 +79,18 @@ struct SignUpView : View{
     }
     
     
-
+// Skapar upp användare och sparar i en lista på firestore g
     func signUp()  {
         Auth.auth().createUser(withEmail: userName, password: userPassword) { authResult, error in
-            if  let user = authResult?.user  {
+            if   let id = authResult?.user.uid {
+                
+           
+                    userHandler.writeToDb(user: User(id: id, name: userName), collection: "Users")
+
+                
                 isSignedIn = true;
-                showSignUp = false
                 
                 
-               currentUser = User(id: user.uid, name: userName)
-                if let currentUser = currentUser{
-                    userHandler.writeToDb(user: currentUser, collection: "Users")
-                    
-                }
             }
         }
         

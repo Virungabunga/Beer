@@ -15,17 +15,17 @@ struct User: Identifiable, Codable{
     var id : String
     var name : String
     var isAtLocation : Bool
-    var friendReq : Bool
+    var friendList : [User]?
     var friendReqList: [User]?
+    var imageId: String = ""
     
     
 
     
-    init( id: String, name : String, isAtLocation: Bool, friendList: [User], friendReq: Bool, friendReqList: [User] ){
+    init( id: String, name : String, isAtLocation: Bool, friendList: [User], friendReqList: [User] ){
         self.id = id
         self.name = name
         self.isAtLocation = isAtLocation
-        self.friendReq = friendReq
         self.friendReqList = friendList
     }
  
@@ -33,7 +33,7 @@ struct User: Identifiable, Codable{
         self.id = id
         self.name = name
         self.isAtLocation = false
-        self.friendReq = false
+
     }
 
     

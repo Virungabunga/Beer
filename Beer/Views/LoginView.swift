@@ -9,7 +9,8 @@ import SwiftUI
 import FirebaseAuth
 struct LoginView: View {
 
-    @Binding var isSignedIn : Bool
+ 
+    @State var isSignedIn = false
     @State var userName : String = ""
     @State var userPassword : String = ""
     @State var showSignUp = false
@@ -38,7 +39,8 @@ struct LoginView: View {
                     
                     Button {
                         //sätt temporär user för felsök sätt till baka userName och userPassword
-                        Login(userName: "oscar@gmail.com" , userPassword: "1234567")
+                        Login(userName: userName, userPassword: userPassword)
+                       
                     } label: {
                         Text("Sign In")
                             .font(.title2)
@@ -66,8 +68,9 @@ struct LoginView: View {
                     }
                     .padding(.horizontal,150)
                     Spacer()
+                   
                 }.fullScreenCover(isPresented: $showSignUp) {
-                    SignUpView(isSignedIn: $isSignedIn, showSignUp: showSignUp)
+                    SignUpView(showSignUp: showSignUp)
                 }
             }
         }
@@ -78,9 +81,11 @@ struct LoginView: View {
         
         Auth.auth().signIn(withEmail: userName, password: userPassword) {  authResult, error in
             
-            if let user = authResult?.user  {
-                userHandler.currentUser = User(id: user.uid, name: userName)
+            if (authResult?.user) != nil  {
+                print("login succeces")
+                userHandler.listenToFirestore(collection: "Users")
                 isSignedIn = true
+              
             }
             else {print(error)}
             

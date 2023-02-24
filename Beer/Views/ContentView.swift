@@ -14,6 +14,8 @@ struct ContentView: View {
     @EnvironmentObject var locationManager : LocationManager
     @EnvironmentObject var bars :Bars
     @EnvironmentObject var userHandler : UserHandler
+    @EnvironmentObject var imageLoader : ImageLoader
+  
     
     var body: some View{
         NavigationView {
@@ -80,42 +82,65 @@ struct MapView : View{
 }
 
 struct BarView  : View {
+    @EnvironmentObject var locationManager : LocationManager
     @EnvironmentObject var bars :Bars
     @EnvironmentObject var userHandler : UserHandler
-    // Du ska skapa binding variabel som visar vilka vänner är vid bar???
+    @State var showBigBarView : Bool = false
     
     
     var body : some View {
-        //Fixaa öl glas klick
-        NavigationLink {
-            BarBigView()
-        } label: {
-            ZStack{
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(LinearGradient(colors: [.yellow, .red],                   startPoint: .topLeading,                   endPoint: .bottomTrailing))
-                    .frame(width: 300, height: 100)
-                VStack{
-                    Text(bars.barSelected.name).scaledToFit()
-                        .foregroundColor(.black)
-                    HStack{
-                        Text(bars.barSelected.liveReview)
-                            .foregroundColor(.black)
-                        Spacer()
-                        //If frends turn turn gren and show up
-                        Image(systemName:"figure.socialdance" )
-   
-                        
-                    }.frame(width: 200)
-                
-                    
-                }
-            }.padding(.top,600)
-              
   
-        }  .frame(width: 300, height: 100)
+            VStack{
+                Spacer(minLength: 600)
+                ZStack{
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(LinearGradient(colors: [.yellow, .red],                   startPoint: .topLeading,                   endPoint: .bottomTrailing))
+                        .frame(width: 300, height: 100)
+                    
+                    VStack{
+                        Spacer()
+                        Text(bars.barSelected.name).scaledToFit()
+                            .foregroundColor(.black)
+                            .font(.headline)
+                        HStack{
+                            NavigationLink( destination: BarBigView(),isActive: $showBigBarView) {
+                            Text("Info")
+                           }
+                            Spacer()
+                             
+                                Spacer()
+                            if(isAtLocation()){
+                                Image(systemName:"figure.socialdance" )
+                                    .foregroundColor(.green)
+                            } else {Image(systemName:"figure.socialdance" )}
+                            
+                        }.padding()
+                        
+                        
+                    }
+                }
+                
+                
+            } .frame(width: 300, height: 100)
+        }
+    
+    
+    func isAtLocation() -> Bool  {
+   
+        let barLocation = CLLocation(latitude: bars.barSelected.latitude, longitude: bars.barSelected.longitude)
+        guard let location = locationManager.location else{
+            
+            return false
+        }
+        
+        let distanceToBar = barLocation.distance(from: CLLocation(latitude:location.latitude, longitude: location.longitude))
+        
+        if(distanceToBar <= 5.0) {
+            userHandler.currentUser.isAtLocation = true
+            return true
+        } else {return false}
+    
     }
-    
-    
     
 }
 

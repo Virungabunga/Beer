@@ -18,7 +18,7 @@ class Bars : ObservableObject {
     var listOfItems : [MKMapItem] = []
     var locationManager : LocationManager?
     @Published var bars : [Bar] = []
-    @Published var barSelected = Bar(id: "",name: "test", latitude: 0.0, longitude: 0.0, phone: "test",liveReview: "test")
+    @Published var barSelected = Bar(id: "",name: "test", latitude: 0.0, longitude: 0.0, phone: "test",liveReview: "test", imageId: "")
     
     
     let db = Firestore.firestore()
@@ -47,7 +47,7 @@ class Bars : ObservableObject {
             }
         }
     }
-    
+    // hashar bar namn för ett unikt id så vi undviker dublikation i firestore
     func hashStrig(stringToHash:String)  -> String{
         
         let inputData = Data(stringToHash.utf8)
@@ -59,7 +59,15 @@ class Bars : ObservableObject {
     }
     
   
-    
+    func WriteReviewToBar(review : Review){
+        do {
+            try
+            //
+            db.collection("Bars").document(barSelected.id).collection("Reviews").document().setData(from:review)
+        } catch {
+            print(error)
+        }
+    }
     
     func writeToFB(bar : Bar) {
   
@@ -72,51 +80,53 @@ class Bars : ObservableObject {
         }
     }
     
-    func saveImage(bar: Bar, photo : ImageData, image : UIImage ) async -> Bool  {
-        
-        let photoName = UUID().uuidString
-        let storage = Storage.storage()
-        let storageRef = storage.reference().child("\(bar.id)/\(photoName).jpeg")
-        
-        guard let resizedImage = image.jpegData(compressionQuality: 0.2) else {
-            print("Could not compress")
-            return false
-        }
-        let metdata = StorageMetadata()
-        metdata.contentType = "image/jpg"  // allow to see in web browser
-        var imageUrlString = ""
-        
-        do {
-            let _ = try await storageRef.putDataAsync(resizedImage, metadata: metdata)
-            print("saved image")
-            do{
-                let imageURL = try await storageRef.downloadURL()
-                imageUrlString = "\(imageURL)"
-            } catch{
-                print("Could not get Url after saved image")
-                return false
-            }
-            
-        } catch {
-            print("error upload Image")
-            return false
-        }
-        let collectionString = "Bars/\(bar.id)/Images"
-        
-        do {
-            var newPhoto = photo
-            newPhoto.imageUrlString = imageUrlString
-            try await db.collection(collectionString).document(photoName).setData(newPhoto.dictionary)
-            print("photo data updated to fb")
-            return true
-            
-        }   catch {
-            print("could not update photo data to storage")
-            return false
-        }
+//    func saveImage(bar: Bar, photo : ImageData, image : UIImage ) async -> Bool  {
+//
+//        let photoName = UUID().uuidString
+//        let storage = Storage.storage()
+//        let storageRef = storage.reference().child("\(bar.id)/\(photoName).jpeg")
+//
+//        guard let resizedImage = image.jpegData(compressionQuality: 0.8) else {
+//            print("Could not compress")
+//            return false
+//        }
+//        let metdata = StorageMetadata()
+//        metdata.contentType = "image/jpg"  // allow to see in web browser
+//        var imageUrlString = ""
+//
+//        do {
+//            let _ = try await storageRef.putDataAsync(resizedImage, metadata: metdata)
+//            print("saved image")
+//            do{
+//                let imageURL = try await storageRef.downloadURL()
+//                imageUrlString = "\(imageURL)"
+//            } catch{
+//                print("Could not get Url after saved image")
+//                return false
+//            }
+//
+//        } catch {
+//            print("error upload Image")
+//            return false
+//        }
+//        let collectionString = "Bars/\(bar.id)/Images"
+//
+//        do {
+//            var newPhoto = photo
+//            newPhoto.imageUrlString = imageUrlString
+//            try await db.collection(collectionString).document(photoName).setData(newPhoto.dictionary)
+//            print("photo data updated to fb")
+//            return true
+//
+//        }   catch {
+//            print("could not update photo data to storage")
+//            return false
+//        }
+//
+//    }
+//
     
-    }
-    
+    //skriver över data när jag söker efter nya barer.. måstefixas
     func fetchDataFromMaps(locationManager:LocationManager) {
         
         if let location = locationManager.location{
@@ -140,7 +150,7 @@ class Bars : ObservableObject {
                             self.bars.append(Bar(id:id,name: name,
                                                  latitude: item.placemark.coordinate.latitude,
                                                  longitude: item.placemark.coordinate.longitude,
-                                                 phone: item.phoneNumber!,liveReview: ""))
+                                                 phone: item.phoneNumber!,liveReview: "", imageId: ""))
                             
                             for bar in self.bars {
                                 self.writeToFB(bar: bar)

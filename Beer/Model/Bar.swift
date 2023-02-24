@@ -16,20 +16,20 @@ struct Bar : Identifiable, Codable  {
     var name : String = ""
     var latitude : Double = 0.0
     var longitude : Double = 0.0
-//    var placeMark : MKPlacemark
     var phone : String = ""
-    var liveReview : String = ""
+    var imageId : String = ""
+    
+
 
   
     
-    init(id: String, name: String, latitude: Double, longitude: Double, phone: String, liveReview : String) {
+    init(id: String, name: String, latitude: Double, longitude: Double, phone: String, liveReview : String, imageId: String) {
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
-//        self.placeMark = placeMark
         self.phone = phone
-        self.liveReview = liveReview
+        self.imageId = imageId
         
     }
     

@@ -7,12 +7,13 @@
 
 import SwiftUI
 import Firebase 
-@main
+	@main
 struct BeerApp: App {
     @State var isSignedIn: Bool = false
     @StateObject var bars = Bars()
     @StateObject var userHandler = UserHandler()
     @StateObject var locationManager = LocationManager()
+    @StateObject var imageLoader = ImageLoader()
     init() {
         FirebaseApp.configure()
     }
@@ -22,6 +23,8 @@ struct BeerApp: App {
                 .environmentObject(locationManager)
                 .environmentObject(userHandler)
                 .environmentObject(bars)
+                .environmentObject(imageLoader)
+               
         }
     }
 }
